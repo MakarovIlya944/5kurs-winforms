@@ -13,33 +13,42 @@ namespace WinForms
 {
     public partial class Form1 : Form
     {
-        public BindingSource Data { get; set; }
-        private void ShowGraphic(SeriesChartType t) {
+        public BindingSource DataCoord { get; set; }
+        private SeriesChartType currentType = SeriesChartType.Line;
+        private void ShowGraphic() {
             chart1.DataSource = null;
-            chart1.Series[0].ChartType = t;
-            chart1.DataSource = Data;
+            chart1.Series[0].ChartType = currentType;
+            chart1.DataSource = DataCoord;
         }
 
         public Form1() {
-            Data = new BindingSource();
-            Data.Add(new Data() { X = 0, Y = 0 });
-            Data.Add(new Data() { X = 1, Y = 1 });
-            Data.Add(new Data() { X = 2, Y = 4 });
+            bindingSource1 = new BindingSource();
+            DataCoord = bindingSource1;
+            DataCoord.Add(new Data() { X = 0, Y = 0 });
+            DataCoord.Add(new Data() { X = 1, Y = 1 });
+            DataCoord.Add(new Data() { X = 2, Y = 4 });
             InitializeComponent();
-            dataGridView1.DataSource = Data;
+            dataGridView1.DataSource = DataCoord;
         }
+
         private void AddButton_Click(object sender, EventArgs e) {
-            Data.Add(new Data() { X = 4, Y = 16 });
+            DataCoord.Add(new Data() { X = 4, Y = 16 });
         }
+
         private void DrawAsLines_Click(object sender, EventArgs e) {
-            ShowGraphic(SeriesChartType.Line);
+            currentType = SeriesChartType.Line;
         }
+
         private void DrawAsSpline_Click(object sender, EventArgs e) {
-            ShowGraphic(SeriesChartType.Spline);
+            currentType = SeriesChartType.Spline;
         }
 
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e) {
-            ShowGraphic((SeriesChartType)(comboBox1.SelectedIndex + 3));
+            currentType = (SeriesChartType)(comboBox1.SelectedIndex + 3);
+        }
+        
+        private void bindingSource1_DataSourceChanged(object sender, EventArgs e) {
+            ShowGraphic();
         }
     }
     public class Data
