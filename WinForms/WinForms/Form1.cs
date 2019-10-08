@@ -1,20 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
+using System.IO;
 using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Windows.Forms.DataVisualization.Charting;
+using System.Linq;
+using System.Collections.Generic;
 
 namespace WinForms
 {
     public partial class Form1 : Form
     {
-        public BindingSource DataCoord { get; set; }
         private SeriesChartType currentType = SeriesChartType.Line;
         public void ShowGraphic() {
             chart1.DataSource = null;
@@ -52,10 +47,41 @@ namespace WinForms
         private void bindingSource1_ListChanged(object sender, ListChangedEventArgs e) {
             ShowGraphic();
         }
+
+        private void openToolStripMenuItem_Click(object sender, EventArgs e) {
+            if(openFileDialog1.ShowDialog() == DialogResult.Cancel)
+                return;
+            // получаем выбранный файл
+            string filename = openFileDialog1.FileName;
+            // читаем файл в строку
+            string fileText = File.ReadAllText(filename);
+            List<string> tmp = fileText.Split('\n').ToList(); tmp.RemoveAt(tmp.Count - 1);
+            bindingSource1.Clear();
+            tmp.ForEach(x => bindingSource1.Add(new Data() {
+                X = Convert.ToDouble(x.Split(' ')[0]),
+                Y = Convert.ToDouble(x.Split(' ')[1])
+            }));
+            MessageBox.Show("Файл загружен");
+        }
+
+        private void saveToolStripMenuItem_Click(object sender, EventArgs e) {
+            if(saveFileDialog1.ShowDialog() == DialogResult.Cancel)
+                return;
+            // получаем выбранный файл
+            string filename = saveFileDialog1.FileName;
+            // сохраняем текст в файл
+            string Text = "";
+            foreach(var a in bindingSource1.List) {
+                Text += a.ToString() + '\n';
+            }
+            File.WriteAllText(filename, Text);
+            MessageBox.Show("Файл сохранен");
+        }
     }
     public class Data
     {
         public double X { get; set; }
         public double Y { get; set; }
+        public override string ToString() { return $"{X} {Y}"; }
     }
 }
