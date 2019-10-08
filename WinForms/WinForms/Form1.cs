@@ -11,22 +11,33 @@ namespace WinForms
     public partial class Form1 : Form
     {
         private SeriesChartType currentType = SeriesChartType.Line;
+        private int maxBind = 1;
         public void ShowGraphic() {
             chart1.DataSource = null;
             chart1.Series[0].ChartType = currentType;
-            chart1.DataSource = bindingSource1;
+            chart1.DataSource = currentBinding;
         }
 
+        private Dictionary<int, BindingSource> bindings;
+        public BindingSource currentBinding;
+
         public Form1() {
+            bindings = new Dictionary<int, BindingSource>();
+            currentBinding = new BindingSource();
+            currentBinding.ListChanged += new ListChangedEventHandler(bindingSource1_ListChanged);
+            bindings.Add(1, currentBinding);
+
             InitializeComponent();
-            bindingSource1.Add(new Data() { X = 0, Y = 0 });
-            bindingSource1.Add(new Data() { X = 1, Y = 1 });
-            bindingSource1.Add(new Data() { X = 2, Y = 4 });
-            dataGridView1.DataSource = bindingSource1;
+
+            currentBinding.Add(new Data() { X = 0, Y = 0 });
+            currentBinding.Add(new Data() { X = 1, Y = 1 });
+            currentBinding.Add(new Data() { X = 2, Y = 4 });
+            dataGridView1.DataSource = currentBinding;
+            comboBoxTable.Items.Add(1);
         }
 
         private void AddButton_Click(object sender, EventArgs e) {
-            bindingSource1.Add(new Data() { X = 4, Y = 16 });
+            currentBinding.Add(new Data() { X = 4, Y = 16 });
         }
 
         private void DrawAsLines_Click(object sender, EventArgs e) {
@@ -56,11 +67,18 @@ namespace WinForms
             // читаем файл в строку
             string fileText = File.ReadAllText(filename);
             List<string> tmp = fileText.Split('\n').ToList(); tmp.RemoveAt(tmp.Count - 1);
-            bindingSource1.Clear();
-            tmp.ForEach(x => bindingSource1.Add(new Data() {
+            currentBinding = new BindingSource();
+            tmp.ForEach(x => currentBinding.Add(new Data() {
                 X = Convert.ToDouble(x.Split(' ')[0]),
                 Y = Convert.ToDouble(x.Split(' ')[1])
             }));
+            maxBind++;
+            bindings.Add(maxBind, currentBinding);
+            comboBoxTable.Items.Add(maxBind);
+            label1.Text = "Table " + maxBind.ToString();
+            comboBoxTable.SelectedItem = maxBind;
+            dataGridView1.DataSource = currentBinding;
+            ShowGraphic();
             MessageBox.Show("Файл загружен");
         }
 
@@ -71,11 +89,34 @@ namespace WinForms
             string filename = saveFileDialog1.FileName;
             // сохраняем текст в файл
             string Text = "";
-            foreach(var a in bindingSource1.List) {
+            foreach(var a in currentBinding.List) {
                 Text += a.ToString() + '\n';
             }
             File.WriteAllText(filename, Text);
             MessageBox.Show("Файл сохранен");
+        }
+
+        private void removeCurrentToolStripMenuItem_Click(object sender, EventArgs e) {
+            if(bindings.Count == 1) {
+                MessageBox.Show("Нельзя удалить последний");
+                return;
+            }
+            bindings.Remove((int)comboBoxTable.SelectedItem);
+            int i = comboBoxTable.Items.IndexOf((int)comboBoxTable.SelectedItem);
+            comboBoxTable.Items.RemoveAt(i);
+            var tmp = bindings.LastOrDefault();
+            currentBinding = tmp.Value;
+            label1.Text = "Table " + tmp.Key.ToString();
+            comboBoxTable.SelectedItem = tmp.Key;
+            dataGridView1.DataSource = currentBinding;
+            ShowGraphic();
+        }
+
+        private void comboBoxTable_SelectedIndexChanged(object sender, EventArgs e) {
+            currentBinding = bindings[(int)comboBoxTable.SelectedItem];
+            label1.Text = "Table " + comboBoxTable.SelectedItem.ToString();
+            dataGridView1.DataSource = currentBinding;
+            ShowGraphic();
         }
     }
     public class Data
