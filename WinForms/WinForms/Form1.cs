@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
@@ -15,39 +16,40 @@ namespace WinForms
     {
         public BindingSource DataCoord { get; set; }
         private SeriesChartType currentType = SeriesChartType.Line;
-        private void ShowGraphic() {
+        public void ShowGraphic() {
             chart1.DataSource = null;
             chart1.Series[0].ChartType = currentType;
-            chart1.DataSource = DataCoord;
+            chart1.DataSource = bindingSource1;
         }
 
         public Form1() {
-            bindingSource1 = new BindingSource();
-            DataCoord = bindingSource1;
-            DataCoord.Add(new Data() { X = 0, Y = 0 });
-            DataCoord.Add(new Data() { X = 1, Y = 1 });
-            DataCoord.Add(new Data() { X = 2, Y = 4 });
             InitializeComponent();
-            dataGridView1.DataSource = DataCoord;
+            bindingSource1.Add(new Data() { X = 0, Y = 0 });
+            bindingSource1.Add(new Data() { X = 1, Y = 1 });
+            bindingSource1.Add(new Data() { X = 2, Y = 4 });
+            dataGridView1.DataSource = bindingSource1;
         }
 
         private void AddButton_Click(object sender, EventArgs e) {
-            DataCoord.Add(new Data() { X = 4, Y = 16 });
+            bindingSource1.Add(new Data() { X = 4, Y = 16 });
         }
 
         private void DrawAsLines_Click(object sender, EventArgs e) {
             currentType = SeriesChartType.Line;
+            ShowGraphic();
         }
 
         private void DrawAsSpline_Click(object sender, EventArgs e) {
             currentType = SeriesChartType.Spline;
+            ShowGraphic();
         }
 
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e) {
             currentType = (SeriesChartType)(comboBox1.SelectedIndex + 3);
+            ShowGraphic();
         }
-        
-        private void bindingSource1_DataSourceChanged(object sender, EventArgs e) {
+
+        private void bindingSource1_ListChanged(object sender, ListChangedEventArgs e) {
             ShowGraphic();
         }
     }

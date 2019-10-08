@@ -26,19 +26,20 @@
         /// </summary>
         private void InitializeComponent() {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend2 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
+            this.bindingSource1 = new System.Windows.Forms.BindingSource(this.components);
             this.addButton = new System.Windows.Forms.Button();
             this.chart1 = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.button1 = new System.Windows.Forms.Button();
             this.button2 = new System.Windows.Forms.Button();
             this.comboBox1 = new System.Windows.Forms.ComboBox();
-            this.bindingSource1 = new System.Windows.Forms.BindingSource(this.components);
+            this.panel1 = new System.Windows.Forms.Panel();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.chart1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.bindingSource1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.chart1)).BeginInit();
             this.SuspendLayout();
             // 
             // dataGridView1
@@ -48,6 +49,10 @@
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.Size = new System.Drawing.Size(240, 150);
             this.dataGridView1.TabIndex = 0;
+            // 
+            // bindingSource1
+            // 
+            this.bindingSource1.ListChanged += new System.ComponentModel.ListChangedEventHandler(this.bindingSource1_ListChanged);
             // 
             // addButton
             // 
@@ -61,19 +66,19 @@
             // 
             // chart1
             // 
-            chartArea2.Name = "ChartArea1";
-            this.chart1.ChartAreas.Add(chartArea2);
-            legend2.Enabled = false;
-            legend2.Name = "Legend1";
-            this.chart1.Legends.Add(legend2);
+            chartArea1.Name = "ChartArea1";
+            this.chart1.ChartAreas.Add(chartArea1);
+            legend1.Enabled = false;
+            legend1.Name = "Legend1";
+            this.chart1.Legends.Add(legend1);
             this.chart1.Location = new System.Drawing.Point(12, 16);
             this.chart1.Name = "chart1";
-            series2.ChartArea = "ChartArea1";
-            series2.Legend = "Legend1";
-            series2.Name = "Series1";
-            series2.XValueMember = "X";
-            series2.YValueMembers = "Y";
-            this.chart1.Series.Add(series2);
+            series1.ChartArea = "ChartArea1";
+            series1.Legend = "Legend1";
+            series1.Name = "Series1";
+            series1.XValueMember = "X";
+            series1.YValueMembers = "Y";
+            this.chart1.Series.Add(series1);
             this.chart1.Size = new System.Drawing.Size(300, 300);
             this.chart1.TabIndex = 2;
             this.chart1.Text = "chart1";
@@ -111,15 +116,19 @@
             this.comboBox1.Text = "Choose action";
             this.comboBox1.SelectedIndexChanged += new System.EventHandler(this.comboBox1_SelectedIndexChanged);
             // 
-            // bindingSource1
+            // panel1
             // 
-            this.bindingSource1.DataSourceChanged += new System.EventHandler(this.bindingSource1_DataSourceChanged);
+            this.panel1.Location = new System.Drawing.Point(581, 16);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(290, 300);
+            this.panel1.TabIndex = 6;
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(582, 397);
+            this.ClientSize = new System.Drawing.Size(883, 338);
+            this.Controls.Add(this.panel1);
             this.Controls.Add(this.comboBox1);
             this.Controls.Add(this.button2);
             this.Controls.Add(this.button1);
@@ -129,8 +138,8 @@
             this.Name = "Form1";
             this.Text = "Form1";
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.chart1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.bindingSource1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.chart1)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -141,6 +150,7 @@
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.ComboBox comboBox1;
+        private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.BindingSource bindingSource1;
     }
 }
